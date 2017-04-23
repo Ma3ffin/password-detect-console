@@ -15,7 +15,7 @@ namespace PasswordDetect.Controller
         {
             User = new User() {Username = username, Password = password};
 
-            if (!UserExists())
+            if (!UsernameExists())
             {
                 if (ValidUser())
                 {
@@ -32,6 +32,20 @@ namespace PasswordDetect.Controller
                 return false;
             }
             ErrorHandler.WriteErrorToConsole("Username exists allredy.");
+            return false;
+
+        }
+
+        public bool UserExists(string username, string password)
+        {
+            User = new User() { Username = username, Password = password };
+            User = UserAuthentificate();
+
+            if (User != null)
+            {
+                return true;
+            }
+            ErrorHandler.WriteErrorToConsole("User does not exist.");
             return false;
 
         }
@@ -62,10 +76,14 @@ namespace PasswordDetect.Controller
             return false;
         }
 
-        private bool UserExists()
+        private bool UsernameExists()
         {
             return DetectionContext.Users.Count(u => u.Username == User.Username) > 0;
+        }
 
+        public User UserAuthentificate()
+        {
+            return DetectionContext.Users.FirstOrDefault(u => u.Username == User.Username && u.Password == User.Password);
         }
     }
 }
