@@ -1,4 +1,5 @@
-﻿using PasswordDetect.Model;
+﻿using System.Collections.Generic;
+using PasswordDetect.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,30 +13,26 @@ namespace PasswordDetect.Controller
 
         public Training Training { get; set; }
 
-        public Dictionary<char,int> Ticks { get; set; }
-
         public List<KeyInput> KeyInputs { get; set; }
 
         public TrainingController()
         {
             Training = new Training();
-            Ticks = new Dictionary<char, int>();
             KeyInputs = new List<KeyInput>();
         }
 
         public void TrackInput(char key, int tick)
         {
-            Ticks.Add(key, tick);
+            KeyInputs.Add(new KeyInput() {Time = tick, Value = key});
         }
 
         public bool AddTraining(User user)
         {
-            if (Ticks.Count != 0)
+            if (KeyInputs.Count != 0)
             {
-                AddKeyInputsWithDeltaTime();
-                Training.KeyInputs = KeyInputs;
-                Training.User = user;
-                Training.Time = GetTainingtime();
+                Training.KeyInputs = AddKeyInputsWithDeltaTime();
+                Training.User = DetectionContext.Users.FirstOrDefault(u => u.UserId == user.UserId);
+                Training.Time = GetTainingtime(Training.KeyInputs);
                 DetectionContext.Trainings.Add(Training);
                 DetectionContext.SaveChanges();
                 return true;
@@ -44,46 +41,43 @@ namespace PasswordDetect.Controller
 
         }
 
-        private long GetTainingtime()
+        private long GetTainingtime(IList<KeyInput> inputs)
         {
             long ret = 0;
-            foreach (var input in KeyInputs)
+            foreach (var input in inputs)
             {
                 ret += input.Time;
             }
             return ret;
         }
 
-        public void AddKeyInputsWithDeltaTime()
+        public List<KeyInput> AddKeyInputsWithDeltaTime()
         {
-            int prevTicks = 0;
+            List<KeyInput> retList = new List<KeyInput>();
+
+            long prevTicks = 0;
             int index = 0;
             KeyInput input;
-            foreach (var tick in Ticks)
+            foreach (var tick in KeyInputs)
             {
                 if (prevTicks == 0) {
-                    prevTicks = tick.Value;
+                    prevTicks = tick.Time;
                     ;
                 }
                 input = new KeyInput() {
                     Position = index ,
-                    Value = tick.Key,
-                    Time = (tick.Value - prevTicks),
+                    Value = tick.Value,
+                    Time = (tick.Time - prevTicks),
                     Training = Training
                 };
                 index++;
-                KeyInputs.Add(input);
-                prevTicks = tick.Value;
+                retList.Add(input);
+                prevTicks = tick.Time;
             }
 
-        }
+            return retList;
 
-        private void saveTraining()
-        {
-            DetectionContext.Trainings.Add(Training);
-            DetectionContext.SaveChanges();
         }
-
 
     }
 }
