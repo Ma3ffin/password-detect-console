@@ -12,24 +12,20 @@ namespace PasswordDetect.Controller
 
         public Training Training { get; set; }
 
-        public List<KeyInput> KeyInputs { get; set; }
-
         public TrainingController()
         {
             Training = new Training();
-            KeyInputs = new List<KeyInput>();
         }
 
-        public void TrackInput(char key, int tick)
+        public bool AddTraining(User user, List<KeyInput> keyInputs)
         {
-            KeyInputs.Add(new KeyInput() {Time = tick, Value = key});
-        }
-
-        public bool AddTraining(User user)
-        {
-            if (KeyInputs.Count != 0)
+            if (keyInputs.Count != 0)
             {
-                Training.KeyInputs = AddKeyInputsWithDeltaTime();
+                Training.KeyInputs = keyInputs;
+                foreach (var input in Training.KeyInputs)
+                {
+                    input.Training = Training;
+                }
                 Training.User = DetectionContext.Users.FirstOrDefault(u => u.UserId == user.UserId);
                 Training.Time = GetTainingtime(Training.KeyInputs);
                 DetectionContext.Trainings.Add(Training);
@@ -48,34 +44,6 @@ namespace PasswordDetect.Controller
                 ret += input.Time;
             }
             return ret;
-        }
-
-        public List<KeyInput> AddKeyInputsWithDeltaTime()
-        {
-            List<KeyInput> retList = new List<KeyInput>();
-
-            long prevTicks = 0;
-            int index = 0;
-            KeyInput input;
-            foreach (var tick in KeyInputs)
-            {
-                if (prevTicks == 0) {
-                    prevTicks = tick.Time;
-                    ;
-                }
-                input = new KeyInput() {
-                    Position = index ,
-                    Value = tick.Value,
-                    Time = (tick.Time - prevTicks),
-                    Training = Training
-                };
-                index++;
-                retList.Add(input);
-                prevTicks = tick.Time;
-            }
-
-            return retList;
-
         }
 
     }

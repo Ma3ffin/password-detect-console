@@ -47,22 +47,5 @@ namespace PasswordDetect.View
 
 
         }
-
-        private string ReadPassword()
-        {
-            WriteToConsole("");
-            string password = null;
-            string output = null;
-            while (true)
-            {
-                var key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
-                    break;
-                password += key.KeyChar;
-                output += "*";
-            }
-            Console.Write(output +"\n");
-            return password;
-        }
     }
 }

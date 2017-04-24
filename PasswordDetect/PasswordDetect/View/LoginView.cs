@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Accord.Statistics.Distributions.Univariate;
 using PasswordDetect.Controller;
 
 namespace PasswordDetect.View
 {
     public class LoginView : BaseView
     {
+        public NormalDistribution Distribution { get; set; }
+
         public UserController UserController { get; set; }
 
-        public TrainingController TrainingController { get; set; }
+        public LoginController LoginController { get; set; }
 
         public string Username { get; set; }
 
@@ -21,13 +24,15 @@ namespace PasswordDetect.View
         {
             Kontext = "Login";
             UserController = new UserController();
+            //Normalverteilung Test
+            Distribution = NormalDistribution.Estimate(new double[4] { 172, 170, 174, 172 });
         }
 
         public override void Start()
         {
             do
             {
-                TrainingController = new TrainingController();
+                KeyInputController = new KeyInputController();
                 WriteLineToConsole("Login a User.");
                 InputUser();
             } while (RepeateOperation("Login another User?"));
@@ -38,31 +43,13 @@ namespace PasswordDetect.View
             WriteLineToConsole("Enter a Username:");
             Username = ReadUsername();
             WriteLineToConsole("Enter a Password:");
-            Password = ReadPassword();
+            Password = ReadPasswordWithTime();
 
             if (UserController.UserExists(Username, Password))
             {
                 WriteLineToConsole("User " + Username + " was Loged in.");
             }
 
-        }
-
-        private string ReadPassword()
-        {
-            WriteToConsole("");
-            string password = null;
-            string output = null;
-            while (true)
-            {
-                var key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Enter)
-                    break;
-                TrainingController.TrackInput(key.KeyChar, Environment.TickCount);
-                password += key.KeyChar;
-                output += "*";
-            }
-            Console.Write(output + "\n");
-            return password;
         }
     }
 }

@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using PasswordDetect.Controller;
 
 namespace PasswordDetect.View
 {
     public abstract class BaseView
     {
+        public KeyInputController KeyInputController { get; set; }
+
         public string Kontext { get; set; }
 
         public void WriteLineToConsole(string message)
@@ -55,6 +58,41 @@ namespace PasswordDetect.View
                 }
                 Console.WriteLine("\n");
             }
+        }
+
+        public string ReadPasswordWithTime()
+        {
+            WriteToConsole("");
+            string password = null;
+            string output = null;
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+                KeyInputController.AddKeyInput(key.KeyChar, Environment.TickCount);
+                password += key.KeyChar;
+                output += "*";
+            }
+            Console.Write(output + "\n");
+            return password;
+        }
+
+        public string ReadPassword()
+        {
+            WriteToConsole("");
+            string password = null;
+            string output = null;
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+                password += key.KeyChar;
+                output += "*";
+            }
+            Console.Write(output + "\n");
+            return password;
         }
 
         public abstract void Start();
