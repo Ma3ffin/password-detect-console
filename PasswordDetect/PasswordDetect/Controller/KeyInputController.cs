@@ -16,9 +16,10 @@ namespace PasswordDetect.Controller
             KeyInputs.Add(new KeyInput() { Time = tick, Value = key });
         }
 
-        public KeyInputController()
+        public KeyInputController() : base()
         {
             KeyInputs = new List<KeyInput>();
+
         }
 
         public List<KeyInput> GetKeyInputsWithDeltaTime()
@@ -33,16 +34,21 @@ namespace PasswordDetect.Controller
                 if (prevTicks == 0)
                 {
                     prevTicks = tick.Time;
-                    ;
                 }
-                input = new KeyInput()
+
+                long delta = tick.Time - prevTicks;
+
+                if (delta != 0)
                 {
-                    Position = index,
-                    Value = tick.Value,
-                    Time = (tick.Time - prevTicks)
-                };
-                index++;
-                retList.Add(input);
+                    input = new KeyInput()
+                    {
+                        Position = index,
+                        Value = tick.Value,
+                        Time = (delta)
+                    };
+                    index++;
+                    retList.Add(input);
+                }
                 prevTicks = tick.Time;
             }
 

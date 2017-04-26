@@ -24,14 +24,13 @@ namespace PasswordDetect.View
         {
             Kontext = "Login";
             UserController = new UserController();
-            //Normalverteilung Test
-            Distribution = NormalDistribution.Estimate(new double[4] { 172, 170, 174, 172 });
         }
 
         public override void Start()
         {
             do
             {
+                LoginController = new LoginController();
                 KeyInputController = new KeyInputController();
                 WriteLineToConsole("Login a User.");
                 InputUser();
@@ -47,7 +46,10 @@ namespace PasswordDetect.View
 
             if (UserController.UserExists(Username, Password))
             {
-                WriteLineToConsole("User " + Username + " was Loged in.");
+                if (LoginController.CheckInputPattern(UserController.UserAuthentificate(), KeyInputController.GetKeyInputsWithDeltaTime()))
+                {
+                    WriteLineToConsole("User " + Username + " was Loged in.");
+                }
             }
 
         }

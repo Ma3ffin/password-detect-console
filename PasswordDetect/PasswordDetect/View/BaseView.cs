@@ -65,6 +65,7 @@ namespace PasswordDetect.View
             WriteToConsole("");
             string password = null;
             string output = null;
+            
             while (true)
             {
                 var key = Console.ReadKey(true);

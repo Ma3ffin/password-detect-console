@@ -21,8 +21,8 @@ namespace PasswordDetect.Controller
                 {
                     if (ValidPassword())
                     {
-                        DetectionContext.Users.Add(User);
-                        DetectionContext.SaveChanges();
+                        DataAccess.AddUser(User);
+                        DataAccess.SaveChanges();
                         return true;
                     }
                     ErrorHandler.WriteErrorToConsole("Password invalid.");
@@ -78,12 +78,12 @@ namespace PasswordDetect.Controller
 
         private bool UsernameExists()
         {
-            return DetectionContext.Users.Count(u => u.Username == User.Username) > 0;
+            return DataAccess.UsernameExists(User.Username);
         }
 
         public User UserAuthentificate()
         {
-            return DetectionContext.Users.FirstOrDefault(u => u.Username == User.Username && u.Password == User.Password);
+            return DataAccess.UserAuthentificate(User.Username,User.Password);
         }
     }
 }

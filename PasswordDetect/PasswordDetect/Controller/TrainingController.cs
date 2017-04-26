@@ -12,7 +12,7 @@ namespace PasswordDetect.Controller
 
         public Training Training { get; set; }
 
-        public TrainingController()
+        public TrainingController() : base()
         {
             Training = new Training();
         }
@@ -26,10 +26,10 @@ namespace PasswordDetect.Controller
                 {
                     input.Training = Training;
                 }
-                Training.User = DetectionContext.Users.FirstOrDefault(u => u.UserId == user.UserId);
+                Training.User = DataAccess.GetUserByUserId(user.UserId);
                 Training.Time = GetTainingtime(Training.KeyInputs);
-                DetectionContext.Trainings.Add(Training);
-                DetectionContext.SaveChanges();
+                DataAccess.AddTraining(Training);
+                DataAccess.SaveChanges();
                 return true;
             }
             return false;

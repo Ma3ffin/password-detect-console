@@ -1,17 +1,18 @@
 ﻿using PasswordDetect.Handler;
 using PasswordDetect.Model;
+using PasswordDetect.Data;
 
 namespace PasswordDetect.Controller
 {
     public class BaseController
     {
-        public DetectionContext DetectionContext { get; set; }
+        public DataAccess DataAccess { get; set; }
 
         public ErrorHandler ErrorHandler { get; set; }
 
         public BaseController()
         {
-            DetectionContext = new DetectionContext();
+            DataAccess = new DataAccess();
             ErrorHandler = new ErrorHandler();
         }
 
