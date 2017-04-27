@@ -50,7 +50,7 @@ namespace PasswordDetect.Controller
             Majority = (InputPositions.Count() / 2)+1; ;
         }
 
-        private bool SimilarInput(List<KeyInput> keyInputs)
+        private bool SimilarInput(List<KeyInput> keyInputs, bool output = false)
         {
             bool ret = true;
 
@@ -69,10 +69,8 @@ namespace PasswordDetect.Controller
             }
 
             int error = 0;
-            ErrorHandler.WriteErrorToConsole("\n\n");
             foreach (var item in similarityBools)
             {
-                ErrorHandler.WriteErrorToConsole(item.ToString());
                 if (!item)
                 {
                     error++;
@@ -84,9 +82,23 @@ namespace PasswordDetect.Controller
                 }
                 
             }
-            ErrorHandler.WriteErrorToConsole("\n\n");
+
+            if (output)
+            {
+                OutputResult(similarityBools);
+            }
 
             return ret;
+        }
+
+        private void OutputResult(List<bool> similarityBools)
+        {
+            ErrorHandler.WriteErrorToConsole("\n");
+            foreach (var item in similarityBools)
+            {
+                ErrorHandler.WriteErrorToConsole(item.ToString());
+            }
+            ErrorHandler.WriteErrorToConsole("\n");
         }
 
         private void GetTraining(User user)

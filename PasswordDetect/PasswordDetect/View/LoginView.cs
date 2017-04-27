@@ -14,6 +14,8 @@ namespace PasswordDetect.View
 
         public UserController UserController { get; set; }
 
+        public TrainingController TrainingController { get; set; }
+
         public LoginController LoginController { get; set; }
 
         public string Username { get; set; }
@@ -30,6 +32,7 @@ namespace PasswordDetect.View
         {
             do
             {
+                TrainingController = new TrainingController();
                 LoginController = new LoginController();
                 KeyInputController = new KeyInputController();
                 WriteLineToConsole("Login a User.");
@@ -48,9 +51,12 @@ namespace PasswordDetect.View
             {
                 if (LoginController.CheckInputPattern(UserController.UserAuthentificate(), KeyInputController.GetKeyInputsWithDeltaTime()))
                 {
+                    TrainingController.AddTraining(UserController.UserAuthentificate(),
+                        KeyInputController.GetKeyInputsWithDeltaTime());
                     WriteLineToConsole("User " + Username + " was Loged in.");
                 }
             }
+            
 
         }
     }

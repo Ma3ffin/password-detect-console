@@ -13,7 +13,7 @@ namespace PasswordDetect.Controller
 
         public void AddKeyInput(char key, int tick)
         {
-            KeyInputs.Add(new KeyInput() { Time = tick, Value = key });
+            KeyInputs.Add(new KeyInput() { Time = tick });
         }
 
         public KeyInputController() : base()
@@ -43,7 +43,6 @@ namespace PasswordDetect.Controller
                     input = new KeyInput()
                     {
                         Position = index,
-                        Value = tick.Value,
                         Time = (delta)
                     };
                     index++;

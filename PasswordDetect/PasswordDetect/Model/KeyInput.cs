@@ -10,8 +10,6 @@ namespace PasswordDetect.Model
     {
         public int KeyInputId { get; set; }
 
-        public char Value { get; set; }
-
         public long Time { get; set; }
 
         public int Position { get; set; }

@@ -41,6 +41,7 @@ namespace PasswordDetect.View
 
         public bool RepeateOperation(string question)
         {
+            
             WriteLineToConsole(question + "[Y/N]");
             while (true)
             {
