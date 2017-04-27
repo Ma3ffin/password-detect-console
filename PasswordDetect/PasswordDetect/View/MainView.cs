@@ -20,12 +20,15 @@ namespace PasswordDetect.View
 
         public LoginView LoginView { get; set; }
 
+        public ImportExportView ImportExportView { get; set; }
+
         public MainView()
         {
             Views = new List<BaseView>();
             Views.Add(new RegisterView());
             Views.Add(new TrainingView());
             Views.Add(new LoginView());
+            Views.Add(new ImportExportView());
             Kontext = "Main";
         }
 

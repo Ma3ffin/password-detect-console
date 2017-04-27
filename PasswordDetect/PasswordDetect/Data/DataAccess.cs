@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -30,6 +31,11 @@ namespace PasswordDetect.Data
         {
             user.Password =Hashing.HashPassword(user.Password);
             db.Users.Add(user);
+        }
+
+        public void AddUsers(List<User> users)
+        {
+            db.Users.AddRange(users);
         }
 
         public bool UsernameExists(string username)
@@ -69,34 +75,27 @@ namespace PasswordDetect.Data
 
         public List<Training> GetTrainingsForUser(User user)
         {
-            List<Training> trainings = new List<Training>();
+            return user.Trainings.ToList();
+        }
 
-            IQueryable<Training> trainingQuery =
-                from t in db.Trainings
-                join u in db.Users
-                on t.User.UserId equals u.UserId
-                where t.User.UserId == user.UserId
-                select t;
+        public List<User> GetAllUsers()
+        {
+            List<User> users = new List<User>();
 
-            foreach (Training item in trainingQuery)
-            {
-                trainings.Add(item);
-            }
-
-            foreach (Training item in trainings)
-            {
-                IQueryable<KeyInput> keyInputQuery =
-                    from k in db.KeyInputs
-                    join t in db.Trainings
-                    on k.Training.TrainingId equals t.TrainingId
-                    where k.Training.TrainingId == item.TrainingId
-                    select k;
+            users = db.Users
+                .Include("Trainings")
+                .Include("Trainings.KeyInputs")
+                .ToList();
 
 
-                foreach (KeyInput input in keyInputQuery) { }
-            }
+            return users;
+        }
 
-            return trainings;
+        public void RemoveAllEntries()
+        {
+            db.KeyInputs.RemoveRange(db.KeyInputs.ToList());
+            db.Trainings.RemoveRange(db.Trainings.ToList());
+            db.Users.RemoveRange(db.Users.ToList());
         }
     }
 }

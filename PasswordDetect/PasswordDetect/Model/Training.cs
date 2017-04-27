@@ -14,7 +14,7 @@ namespace PasswordDetect.Model
 
         public User User { get; set; }
 
-        public IList<KeyInput> KeyInputs { get; set; }
+        public virtual IList<KeyInput> KeyInputs { get; set; }
 
         public Training()
         {

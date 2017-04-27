@@ -14,7 +14,7 @@ namespace PasswordDetect.Model
 
         public string Password { get; set; }
 
-        public IList<Training> Trainings { get; set; }
+        public virtual IList<Training> Trainings { get; set; }
 
         public User()
         {
