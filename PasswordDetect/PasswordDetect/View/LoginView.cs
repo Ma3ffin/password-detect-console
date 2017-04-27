@@ -49,9 +49,9 @@ namespace PasswordDetect.View
 
             if (UserController.UserExists(Username, Password))
             {
-                if (LoginController.CheckInputPattern(UserController.UserAuthentificate(), KeyInputController.GetKeyInputsWithDeltaTime()))
+                if (LoginController.CheckInputPattern(UserController.User, KeyInputController.GetKeyInputsWithDeltaTime()))
                 {
-                    TrainingController.AddTraining(UserController.UserAuthentificate(),
+                    TrainingController.AddTraining(UserController.User,
                         KeyInputController.GetKeyInputsWithDeltaTime());
                     WriteLineToConsole("User " + Username + " was Loged in.");
                 }

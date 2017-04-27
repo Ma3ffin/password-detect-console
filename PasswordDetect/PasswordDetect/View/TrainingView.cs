@@ -44,7 +44,7 @@ namespace PasswordDetect.View
 
             if (UserController.UserExists(Username, Password))
             {
-                TrainingController.AddTraining(UserController.UserAuthentificate(), KeyInputController.GetKeyInputsWithDeltaTime());
+                TrainingController.AddTraining(UserController.User, KeyInputController.GetKeyInputsWithDeltaTime());
                 WriteLineToConsole("User " + Username + " was trained.");
             }
 

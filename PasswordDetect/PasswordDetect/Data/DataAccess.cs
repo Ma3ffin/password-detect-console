@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using PasswordDetect.Model;
@@ -27,6 +28,7 @@ namespace PasswordDetect.Data
 
         public void AddUser(User user)
         {
+            user.Password =Hashing.HashPassword(user.Password);
             db.Users.Add(user);
         }
 
@@ -37,7 +39,17 @@ namespace PasswordDetect.Data
 
         public User UserAuthentificate(string username, string password)
         {
-            return db.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
+            User ret = db.Users.FirstOrDefault(u => u.Username == username);
+
+            if (ret != null)
+            {
+                if (!Hashing.ValidatePassword(password, ret.Password))
+                {
+                    ret = null;
+                }
+            }
+
+            return ret;
         }
 
         public User GetUserByUserId(int userId)
