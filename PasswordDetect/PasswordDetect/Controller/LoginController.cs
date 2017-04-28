@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Accord.Math;
 using Accord.Statistics.Distributions.Univariate;
+using PasswordDetect.Data;
+using PasswordDetect.Handler;
 using PasswordDetect.Model;
 
 namespace PasswordDetect.Controller
@@ -21,7 +23,12 @@ namespace PasswordDetect.Controller
 
         private int Majority { get; set; }
 
-        public LoginController() : base()
+        public LoginController(DataAccess db, IErrorHandler errorHandler) : base(db, errorHandler)
+        {
+            ResetController();
+        }
+
+        public void ResetController()
         {
             Trainings = new List<Training>();
             InputPositions = new Dictionary<int, List<long>>();
@@ -37,10 +44,12 @@ namespace PasswordDetect.Controller
 
             if (SimilarInput(keyInputs))
             {
+                ResetController();
                 return true;
             }
 
-            ErrorHandler.WriteErrorToConsole("Wrong User was typing. User was not logged in.");
+            ErrorHandler.Error("Wrong User was typing. User was not logged in.");
+            ResetController();
             return false;
         }
 
@@ -93,12 +102,12 @@ namespace PasswordDetect.Controller
 
         private void OutputResult(List<bool> similarityBools)
         {
-            ErrorHandler.WriteErrorToConsole("\n");
+            ErrorHandler.Error("\n");
             foreach (var item in similarityBools)
             {
-                ErrorHandler.WriteErrorToConsole(item.ToString());
+                ErrorHandler.Error(item.ToString());
             }
-            ErrorHandler.WriteErrorToConsole("\n");
+            ErrorHandler.Error("\n");
         }
 
         private void GetTraining(User user)
@@ -136,13 +145,14 @@ namespace PasswordDetect.Controller
             {
                 if (e.Message.Equals("Variance is zero. Try specifying a regularization constant in the fitting options."))
                 {
-                    ErrorHandler.WriteErrorToConsole("This User is not trained enougth. Please train him more.\n");
+                    ErrorHandler.Error("This User is not trained enougth. Please train him more.\n");
                 }
                 
                 throw;
             }
             
         }
+
 
     }
 }

@@ -9,16 +9,16 @@ namespace PasswordDetect.View
 {
     public class ImportExportView : BaseView
     {
-        public ImportExportController ImportExportController { get; set; }
+        public IImportExportController ImportExportController { get; set; }
 
-        public ImportExportView() : base()
+        public ImportExportView(IImportExportController importExportController) : base(null)
         {
             Kontext = "Import/Export";
+            ImportExportController = importExportController;
         }
 
         public override void Start()
         {
-            ImportExportController = new ImportExportController();
             WriteLineToConsole("What do you want to do?");
             WriteLineToConsole("i) Import database from json");
             WriteLineToConsole("e) Export database as json");
@@ -37,11 +37,15 @@ namespace PasswordDetect.View
                 {
                     Console.WriteLine("\n");
                     return Import();
-                }
-                if (key.Key == ConsoleKey.E)
+                }else if (key.Key == ConsoleKey.E)
                 {
                     Console.WriteLine("\n");
                     return Export();
+                }
+                else
+                {
+                    Console.WriteLine("\n");
+                    WriteToConsole("Invalid input!");
                 }
                 Console.WriteLine("\n");
             }

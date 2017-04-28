@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PasswordDetect.Data;
+using PasswordDetect.Handler;
 using PasswordDetect.Model;
 
 namespace PasswordDetect.Controller
@@ -10,6 +12,11 @@ namespace PasswordDetect.Controller
     public class UserController : BaseController
     {
         public User User { get; set; }
+
+
+        public UserController(DataAccess db, IErrorHandler errorHandler) : base(db, errorHandler)
+        {
+        }
 
         public bool AddUser(string username, string password)
         {
@@ -25,13 +32,13 @@ namespace PasswordDetect.Controller
                         DataAccess.SaveChanges();
                         return true;
                     }
-                    ErrorHandler.WriteErrorToConsole("Password invalid.");
+                    ErrorHandler.Error("Password invalid.");
                     return false;
                 }
-                ErrorHandler.WriteErrorToConsole("Username invalid.");
+                ErrorHandler.Error("Username invalid.");
                 return false;
             }
-            ErrorHandler.WriteErrorToConsole("Username exists allredy.");
+            ErrorHandler.Error("Username exists allredy.");
             return false;
 
         }
@@ -45,7 +52,7 @@ namespace PasswordDetect.Controller
             {
                 return true;
             }
-            ErrorHandler.WriteErrorToConsole("User does not exist.");
+            ErrorHandler.Error("User does not exist.");
             return false;
 
         }
@@ -85,5 +92,7 @@ namespace PasswordDetect.Controller
         {
             return DataAccess.UserAuthentificate(User.Username,User.Password);
         }
+
+
     }
 }

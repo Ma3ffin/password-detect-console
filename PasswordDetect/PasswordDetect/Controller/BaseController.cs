@@ -8,12 +8,12 @@ namespace PasswordDetect.Controller
     {
         public DataAccess DataAccess { get; set; }
 
-        public ErrorHandler ErrorHandler { get; set; }
+        public IErrorHandler ErrorHandler { get; set; }
 
-        public BaseController()
+        public BaseController(DataAccess db, IErrorHandler errorHandler)
         {
-            DataAccess = new DataAccess();
-            ErrorHandler = new ErrorHandler();
+            ErrorHandler = errorHandler;
+            DataAccess = db;
         }
 
     }

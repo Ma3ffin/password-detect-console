@@ -16,10 +16,10 @@ namespace PasswordDetect.View
 
         public string Password { get; set; }
 
-        public RegisterView()
+        public RegisterView(UserController userController): base(null)
         {
             Kontext = "Add";
-            UserController = new UserController();
+            UserController = userController;
         }
 
         public override void Start()

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PasswordDetect.Data;
+using PasswordDetect.Handler;
 using PasswordDetect.Model;
 
 namespace PasswordDetect.Controller
@@ -11,16 +13,17 @@ namespace PasswordDetect.Controller
     {
         public List<KeyInput> KeyInputs { get; set; }
 
+        public KeyInputController(DataAccess db, IErrorHandler errorHandler) : base(db, errorHandler)
+        {
+            KeyInputs = new List<KeyInput>();
+
+        }
+
         public void AddKeyInput(char key, int tick)
         {
             KeyInputs.Add(new KeyInput() { Time = tick });
         }
 
-        public KeyInputController() : base()
-        {
-            KeyInputs = new List<KeyInput>();
-
-        }
 
         public List<KeyInput> GetKeyInputsWithDeltaTime()
         {
@@ -50,9 +53,11 @@ namespace PasswordDetect.Controller
                 }
                 prevTicks = tick.Time;
             }
-
+            KeyInputs = new List<KeyInput>();
             return retList;
 
         }
+
+ 
     }
 }

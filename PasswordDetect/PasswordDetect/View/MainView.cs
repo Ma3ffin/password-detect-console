@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PasswordDetect.Handler;
 using PasswordDetect.Model;
 
 namespace PasswordDetect.View
 {
     public class MainView : BaseView
     {
-        public List<BaseView> Views { get; set; }
+        public List<MenuItem> Views { get; set; }
 
-        public BaseView SelectedView { get; set; }
+        public MenuItem SelectedView { get; set; }
 
         public RegisterView RegisterView { get; set; }
 
@@ -22,13 +24,9 @@ namespace PasswordDetect.View
 
         public ImportExportView ImportExportView { get; set; }
 
-        public MainView()
+        public MainView(IEnumerable<MenuItem> views):base(null)
         {
-            Views = new List<BaseView>();
-            Views.Add(new RegisterView());
-            Views.Add(new TrainingView());
-            Views.Add(new LoginView());
-            Views.Add(new ImportExportView());
+            Views = views.ToList();
             Kontext = "Main";
         }
 
@@ -49,7 +47,7 @@ namespace PasswordDetect.View
             var key = Console.ReadKey();
             Console.WriteLine("\n");
             int input = (int)Char.GetNumericValue(key.KeyChar);
-            if (input == Views.Count)
+            if (input == Views.Count())
             {
                 return false;
             }
@@ -59,11 +57,12 @@ namespace PasswordDetect.View
                 SelectedView = Views.ElementAt(input);
                 SelectedView.Start();
             }
-            catch (Exception e)
+            catch (ArgumentOutOfRangeException)
             {
+                WriteToConsole("Invalid Input!\n");
                 return true;
             }
-            
+
             return true;
         }
     }
