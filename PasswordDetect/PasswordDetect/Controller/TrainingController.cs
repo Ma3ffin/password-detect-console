@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using PasswordDetect.Model;
 using System;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,11 @@ namespace PasswordDetect.Controller
         public Training Training { get; set; }
 
         public TrainingController(DataAccess db, IErrorHandler errorHandler) : base(db, errorHandler)
+        {
+            
+        }
+
+        public void Reset()
         {
             Training = new Training();
         }
@@ -38,7 +44,7 @@ namespace PasswordDetect.Controller
 
         }
 
-        private long GetTainingtime(IList<KeyInput> inputs)
+        private long GetTainingtime(List<KeyInput> inputs)
         {
             long ret = 0;
             foreach (var input in inputs)

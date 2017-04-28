@@ -30,6 +30,8 @@ namespace PasswordDetect.View
             do
             {
                 WriteLineToConsole("Train a User.");
+                TrainingController.Reset();
+                KeyInputController.Reset();
                 InputUser();
             } while (RepeateOperation("Train another User?"));
         }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Accord.Math;
 using Accord.Statistics.Distributions.Univariate;
 using PasswordDetect.Data;
+using PasswordDetect.Exceptions;
 using PasswordDetect.Handler;
 using PasswordDetect.Model;
 
@@ -37,19 +38,34 @@ namespace PasswordDetect.Controller
 
         public bool CheckInputPattern(User user, List<KeyInput> keyInputs)
         {
-            GetTraining(user);
-            GetInputTimes();
-            GetInputDistributions();
-            SetMajority();
-
-            if (SimilarInput(keyInputs))
+            if (GetTraining(user))
             {
-                ResetController();
-                return true;
-            }
+                try
+                {
+                    GetInputTimes();
+                    GetInputDistributions();
+                    SetMajority();
 
-            ErrorHandler.Error("Wrong User was typing. User was not logged in.");
-            ResetController();
+                    if (SimilarInput(keyInputs))
+                    {
+                        ResetController();
+                        return true;
+                    }
+
+                    ErrorHandler.Error("Wrong User was typing. User was not logged in.");
+                    ResetController();
+                }
+                catch (UserNotTrainedEnoughtException e)
+                {
+                    ErrorHandler.Error(e.Message);
+                    return false;
+                }
+            }
+            else
+            {
+                ErrorHandler.Error("User is not trained.");
+                ResetController();
+            }
             return false;
         }
 
@@ -110,9 +126,15 @@ namespace PasswordDetect.Controller
             ErrorHandler.Error("\n");
         }
 
-        private void GetTraining(User user)
+        private bool GetTraining(User user)
         {
             Trainings = DataAccess.GetTrainingsForUser(user);
+            if (Trainings.Count < 1)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public void GetInputTimes()
@@ -141,14 +163,11 @@ namespace PasswordDetect.Controller
                 }
 
             }
-            catch (Exception e)
+            
+            catch (ArgumentException e)
             {
-                if (e.Message.Equals("Variance is zero. Try specifying a regularization constant in the fitting options."))
-                {
-                    ErrorHandler.Error("This User is not trained enougth. Please train him more.\n");
-                }
-                
-                throw;
+
+                throw new UserNotTrainedEnoughtException("This User is not trained enougth. Please train more.\n", e);
             }
             
         }

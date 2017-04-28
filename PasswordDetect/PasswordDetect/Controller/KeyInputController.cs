@@ -15,8 +15,12 @@ namespace PasswordDetect.Controller
 
         public KeyInputController(DataAccess db, IErrorHandler errorHandler) : base(db, errorHandler)
         {
-            KeyInputs = new List<KeyInput>();
+            Reset();
+        }
 
+        public void Reset()
+        {
+            KeyInputs = new List<KeyInput>();
         }
 
         public void AddKeyInput(char key, int tick)

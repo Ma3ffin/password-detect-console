@@ -38,7 +38,7 @@ namespace PasswordDetect.Controller
                 ErrorHandler.Error("Username invalid.");
                 return false;
             }
-            ErrorHandler.Error("Username exists allredy.");
+            ErrorHandler.Error("Username exists already.");
             return false;
 
         }

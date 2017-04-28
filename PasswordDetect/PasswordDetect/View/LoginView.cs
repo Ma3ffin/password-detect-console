@@ -35,6 +35,7 @@ namespace PasswordDetect.View
             do
             {
                 WriteLineToConsole("Login a User.");
+                KeyInputController.Reset();
                 InputUser();
             } while (RepeateOperation("Login another User?"));
         }

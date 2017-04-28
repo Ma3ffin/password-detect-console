@@ -5,6 +5,7 @@ using System.Data.Entity.Core.Common.CommandTrees;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PasswordDetect.Exceptions;
 using PasswordDetect.Handler;
 using PasswordDetect.Model;
 
@@ -62,6 +63,13 @@ namespace PasswordDetect.View
                 WriteToConsole("Invalid Input!\n");
                 return true;
             }
+            catch (PasswordDetectException ex)
+            {
+                Console.WriteLine("Programm Error occoured! Please contact the Software Manufacturerer Error: " +
+                                  ex.Message);
+                return true;
+            }
+            
 
             return true;
         }
