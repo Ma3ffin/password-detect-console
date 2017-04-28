@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PasswordDetect.Data;
+using PasswordDetect.Handler;
 
 namespace PasswordDetect.Controller
 {
@@ -12,7 +14,7 @@ namespace PasswordDetect.Controller
 
         public Training Training { get; set; }
 
-        public TrainingController() : base()
+        public TrainingController(DataAccess db, IErrorHandler errorHandler) : base(db, errorHandler)
         {
             Training = new Training();
         }

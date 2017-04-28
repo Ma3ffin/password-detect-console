@@ -9,10 +9,14 @@ using PasswordDetect.Data;
 
 namespace PasswordDetect.View
 {
-    public abstract class BaseView
+    public abstract class BaseView : MenuItem
     {
         public KeyInputController KeyInputController { get; set; }
 
+        protected BaseView(KeyInputController keyInputController)
+        {
+            KeyInputController = keyInputController;
+        }
         public string Kontext { get; set; }
 
         public void WriteLineToConsole(string message)

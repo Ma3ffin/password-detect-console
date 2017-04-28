@@ -11,20 +11,11 @@ namespace PasswordDetect.Data
 {
     public class DataAccess
     {
-        private static DetectionContext db;
+        private readonly DetectionContext db;
 
-        public DataAccess(DetectionContext db = null)
+        public DataAccess(DetectionContext db)
         {
-            if (null != db)
-            {
-                DataAccess.db = db;
-            }
-
-            if (null == DataAccess.db)
-            {
-                DataAccess.db = new DetectionContext();
-
-            }
+            this.db = db;
         }
 
         public void AddUser(User user)

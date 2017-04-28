@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace PasswordDetect.Handler
 {
-    public class ErrorHandler
+    public class ConsoleErrorHandler : IErrorHandler
     {
-        public void WriteErrorToConsole(string error)
+        public void Error(string error)
         {
             Console.WriteLine("Error\t>\t" + error);
         }
     }
+
+   
 }

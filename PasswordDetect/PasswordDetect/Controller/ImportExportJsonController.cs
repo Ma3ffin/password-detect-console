@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PasswordDetect.Data;
+using PasswordDetect.Handler;
 using PasswordDetect.Model;
 
 namespace PasswordDetect.Controller
 {
-    public class ImportExportController : BaseController
+    public class ImportExportJsonController : BaseController, IImportExportController
     {
         public bool Import()
         {
@@ -17,7 +19,7 @@ namespace PasswordDetect.Controller
             try
             {
                 string json = ReadFromFile();
-
+                
                 List<User> users = JsonConvert.DeserializeObject<List<User>>(json);
                 DataAccess.RemoveAllEntries();
                 DataAccess.SaveChanges();
@@ -26,9 +28,9 @@ namespace PasswordDetect.Controller
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                ErrorHandler.WriteErrorToConsole("Import failed. Check if the File ..bin/data/import/data.json exists and has the right format");
+                ErrorHandler.Error("Import failed. Check if the File ..bin/data/import/data.json exists and has the right format");
                 return false;
             }
            
@@ -47,9 +49,9 @@ namespace PasswordDetect.Controller
             {
                 WriteToFile(json);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                ErrorHandler.WriteErrorToConsole("Export failed. Check if the Folder ..bin/data/export/ exists.");
+                ErrorHandler.Error("Export failed. Check if the Folder ..bin/data/export/ exists.");
                 return false;
             }
 
@@ -60,23 +62,31 @@ namespace PasswordDetect.Controller
         {
             FileStream fileStream = File.Open("../data/export/data.json", FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-            var writer = new StreamWriter(fileStream);
-            writer.Write(json);
-            writer.Flush();
-            writer.Close();
+            using (var writer = new StreamWriter(fileStream))
+            {
+                writer.Write(json);
+                writer.Flush();
 
-            return true;
+
+                return true;
+            }
         }
 
         private string ReadFromFile()
         {
             FileStream fileStream = File.Open("../data/import/data.json", FileMode.Open, FileAccess.Read);
 
-            var reader = new StreamReader(fileStream);
+            using (var reader = new StreamReader(fileStream))
+            {
 
-            string json = reader.ReadToEnd();
+                string json = reader.ReadToEnd();
+                return json;
+            }
+            
+        }
 
-            return json;
+        public ImportExportJsonController(DataAccess db, IErrorHandler errorHandler) : base(db, errorHandler)
+        {
         }
     }
 }

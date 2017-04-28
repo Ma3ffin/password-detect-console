@@ -22,19 +22,18 @@ namespace PasswordDetect.View
 
         public string Password { get; set; }
 
-        public LoginView()
+        public LoginView(LoginController loginController, UserController userController, KeyInputController keyInputController, TrainingController trainingController): base(keyInputController)
         {
             Kontext = "Login";
-            UserController = new UserController();
+            UserController = userController;
+            TrainingController = trainingController;
+            LoginController = loginController;
         }
 
         public override void Start()
         {
             do
             {
-                TrainingController = new TrainingController();
-                LoginController = new LoginController();
-                KeyInputController = new KeyInputController();
                 WriteLineToConsole("Login a User.");
                 InputUser();
             } while (RepeateOperation("Login another User?"));

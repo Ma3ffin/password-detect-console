@@ -18,18 +18,17 @@ namespace PasswordDetect.View
 
         public string Password { get; set; }
 
-        public TrainingView()
+        public TrainingView(UserController userController, TrainingController trainingController, KeyInputController keyInputController) : base(keyInputController)
         {
             Kontext = "Train";
-            UserController = new UserController();
+            UserController = userController;
+            TrainingController = trainingController;
         }
 
         public override void Start()
         {
             do
             {
-                TrainingController = new TrainingController();
-                KeyInputController = new KeyInputController();
                 WriteLineToConsole("Train a User.");
                 InputUser();
             } while (RepeateOperation("Train another User?"));
