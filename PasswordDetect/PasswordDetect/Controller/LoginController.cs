@@ -35,7 +35,7 @@ namespace PasswordDetect.Controller
             GetInputDistributions();
             SetMajority();
 
-            if (SimilarInput(keyInputs,true))
+            if (SimilarInput(keyInputs))
             {
                 return true;
             }
