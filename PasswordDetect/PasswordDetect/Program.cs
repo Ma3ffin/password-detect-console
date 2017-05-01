@@ -47,18 +47,9 @@ namespace PasswordDetect
 
         static void Main(string[] woller)
         {
-
-
             SetupContainer();
-
             var mainView = Shared.Container.Resolve<MainView>();
-            
             mainView.Start();
-
-            
-            //RegisterView register = new RegisterView();
-
-            //register.Start();
 
         }
     }
